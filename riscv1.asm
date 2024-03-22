@@ -15,6 +15,8 @@
              add a0,zero ,%reg
              ecall
         .end_macro
+        
+        .eqv PRINT_ARG 4
 
 
 	.data
