@@ -4,6 +4,14 @@
              ecall
         .end_macro
         
+           
+        .macro print_str_reg (%reg)
+             li a7, 4
+             mv a0, %reg
+             ecall
+        .end_macro
+        
+        
         .macro read_int_reg (%reg)
              li a7, 5
              ecall
