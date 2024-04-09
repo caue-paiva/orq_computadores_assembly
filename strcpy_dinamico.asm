@@ -16,9 +16,19 @@
              ecall
         .end_macro
         
+        .macro alloc (%reg_tam, %addr_retorno) 
+             li a7,9
+             mv a0, %reg_tam
+             ecall
+             mv %addr_retorno, a0 
+        .end_macro
+        
+        
+        
 	
 	
 	.eqv NULL_TERM_VAL 0
+	
 	.eqv FUNC_RETURN_R a0
 	.eqv FUNC_ARG_R a2
 	.eqv FUNC_ARG2_R a3
@@ -27,6 +37,7 @@
 	.eqv STR_SIZE_R s0
 	.eqv STR_ADDR_R s1
 	.eqv COPY_STR_ADDR_R s2
+	.eqv PTR_ADDR_R s3
 	
 	
 	.eqv CHAR_ADDR_R t2
@@ -42,6 +53,8 @@
 	.data
 	.align 0
 str1:	.asciz "hello"
+	.align 2
+ptr:	.word #ponteiro para o novo endereço de memoria alocado
 
 
 
@@ -49,9 +62,9 @@ str1:	.asciz "hello"
 	.align 2
 	.globl main
 	
-
 main:
 	la STR_ADDR_R, str1 #carrega endereço da str nesses registrador
+	la PTR_ADDR_R, ptr
 	mv FUNC_ARG_R,STR_ADDR_R #move o endereço da string pro argumento da function call
 	
 	
@@ -59,6 +72,7 @@ main:
 	
 	mv STR_SIZE_R, FUNC_RETURN_R #guarda o retorno da função num registrador do tamanho da string
 	
+	print_int_reg STR_SIZE_R
 	
 	mv FUNC_ARG_R,STR_SIZE_R #guarda endereço da string  no primeiro arg da função
 	mv FUNC_ARG2_R, STR_ADDR_R
@@ -66,7 +80,10 @@ main:
 	jal str_cpy  #chama função de string copy
 	mv COPY_STR_ADDR_R, FUNC_RETURN_R #move o resultado para esse registrador
 	 
-	print_str_reg COPY_STR_ADDR_R #printa a string
+	print_str_addr ptr #printa a string
+	
+	li a7,10
+	ecall
 	
 
 str_size:
@@ -95,6 +112,7 @@ str_cpy: #retorna um endereço de memória com a string copia
 	
 	mv CHAR_ADDR_R, FUNC_ARG2_R #coloca o endereço do primeiro byte da str original
 	
+	alloc FUNC_ARG_R, STR2_ADDR_R #primeiro argumento é o tamanho do espaço alocado e ele vai ser colocado em STR2_ADDR_R
 	
 	mv CHAR2_ADDR_R, STR2_ADDR_R #guarda o endereço inicial da nova string no registrador de endereço do char
 	
@@ -112,5 +130,7 @@ loop2:
 	j loop2
 	
 end_loop2:	
-	mv FUNC_RETURN_R, STR2_ADDR_R #vamos retornar o endereço da nova string
+
+	sw STR2_ADDR_R, 0(PTR_ADDR_R) #guarda o endereço da str2 no ponteiro 
+	mv FUNC_RETURN_R, PTR_ADDR_R #vamos retornar o endereço da nova string
 	jr ra
