@@ -80,7 +80,7 @@ main:
 	jal str_cpy  #chama função de string copy
 	mv COPY_STR_ADDR_R, FUNC_RETURN_R #move o resultado para esse registrador
 	
-	lw COPY_STR_ADDR_R, 0(COPY_STR_ADDR_R)
+	lw COPY_STR_ADDR_R, 0(COPY_STR_ADDR_R) #carrega o endereço apontado pelo ponteiro ptr nesse registrador
 	 
 	print_str_reg COPY_STR_ADDR_R #printa a string
 	
