@@ -1,4 +1,4 @@
-	.eqv SIZE 7
+	
 	
 	.macro print_int_reg (%reg)
              li a7 ,1
@@ -6,8 +6,7 @@
              ecall
         .end_macro
 	
-	
-	
+	.eqv SIZE 7
 	.eqv I_LOOP_VAR t0
 	.eqv I_LOOP_CONDI t1
 	
@@ -26,15 +25,10 @@
 	.align 2
 vec:	.word  1,6,7,8,9,10,2
 
-
-
 	.text
 	.align 2
 	.globl main
-	
-
 main:
-
 	li I_LOOP_VAR, 0 #carrega o i como zero
 	li I_LOOP_CONDI, SIZE #se i for igual ao tamanho do vetor, da break
 	
@@ -61,10 +55,9 @@ loopj:
 	lw CUR_NUM_R, 0(CUR_INDEX_R)
 	lw PREV_NUM_R, 0(PREV_INDEX_R) #pega os valores do vetor
 	
-	
 	ble PREV_NUM_R, CUR_NUM_R, end_swap #caso o anterior seja menor ou igual ao atual, não troca
 	
-	sw PREV_NUM_R, 0(CUR_INDEX_R)
+	sw PREV_NUM_R, 0(CUR_INDEX_R) #troca numeros em j e j-1
 	sw CUR_NUM_R, 0(PREV_INDEX_R)
 	
 end_swap:
@@ -73,16 +66,14 @@ end_swap:
 	j loopj
 end_loopj:
 	
-	
 	addi I_LOOP_VAR,I_LOOP_VAR, 1 #add 1 ao i
 	beq I_LOOP_VAR,I_LOOP_CONDI, end_loopi
 	j loopi
 end_loopi:
 	
-	#######
+	####### loop de printar
 	li I_LOOP_VAR, 0
-	li I_LOOP_CONDI , SIZE
-				
+	li I_LOOP_CONDI , SIZE	
 print_loop:
 	mv CUR_INDEX_R, I_LOOP_VAR #index do vetor é a variavel do loop
 	
