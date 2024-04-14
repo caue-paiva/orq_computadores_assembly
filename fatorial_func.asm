@@ -15,7 +15,7 @@
 	.eqv LOOP_CONDI_R t1
 	
 	
-	.eqv FAT_NUM_R s0
+	.eqv INPUT_NUM_R s0
 	
 	.eqv FAT_FUNC_ARG_R a3
 	.eqv FAT_FUNC_RETURN_R a0
@@ -29,12 +29,12 @@
 	
 main:
 
-	read_int_reg FAT_NUM_R #le inteiro e guarda no registrado do num do fatorial
-	mv FAT_FUNC_ARG_R, FAT_NUM_R #move num do fatorial para registrador de argumento da func fatorial
+	read_int_reg INPUT_NUM_R #le inteiro e guarda no registrado do num do fatorial
+	mv FAT_FUNC_ARG_R, INPUT_NUM_R #move num do fatorial para registrador de argumento da func fatorial
 	
-	jal factorial
+	jal factorial #chama a funcao fatorial
 	
-	print_int_reg FAT_FUNC_RETURN_R
+	print_int_reg FAT_FUNC_RETURN_R #print no retorno da função
 	
 	 
 
@@ -46,14 +46,14 @@ factorial:
 	mv LOOP_INDEX_R, FAT_FUNC_ARG_R #o index vai começar no numero que foi passado como argumento
 
 loop:
-	mul FAT_FUNC_RESULT_R, FAT_FUNC_RESULT_R, LOOP_INDEX_R
+	mul FAT_FUNC_RESULT_R, FAT_FUNC_RESULT_R, LOOP_INDEX_R #multiplica a variavel do resultado pelo numero do index
 	addi LOOP_INDEX_R,LOOP_INDEX_R, -1 #subtrai index do loop
-	ble LOOP_INDEX_R, LOOP_CONDI_R , loop_end
+	ble LOOP_INDEX_R, LOOP_CONDI_R , loop_end #cado index seja menor ou igual a 1, sai do loop
 	j loop
 loop_end:
 
-	mv FAT_FUNC_RETURN_R, FAT_FUNC_RESULT_R #carrega o valor multiplicado no registrador de retorno
-	jr ra
+	mv FAT_FUNC_RETURN_R, FAT_FUNC_RESULT_R #carrega o valor multiplicado/resultado no registrador de retorno
+	jr ra #retorna
 
 	
 
