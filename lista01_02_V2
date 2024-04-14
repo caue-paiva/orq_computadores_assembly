@@ -1,0 +1,51 @@
+	.macro print_int_reg (%reg)
+             li a7 ,1
+             add a0,zero ,%reg
+             ecall
+        .end_macro
+	
+	.eqv SIZE 7
+	
+	.eqv i_loop_var t0
+	.eqv i_loop_condi t1
+	
+	.eqv vec_offset t2
+	.eqv cur_val t3
+	
+	.eqv vec_addr s0
+	.eqv sum s1
+	
+
+	.data
+	.align 2
+vec:	.word 2,3,4,5,6,7,10
+
+  
+    
+  	.text
+  	.align 2
+  	.globl main  
+  	
+  	
+main:
+	la vec_addr, vec #carrega endereço do vetor
+	
+	li i_loop_var, 0 #variavel de loop inicada como 0
+	li i_loop_condi, SIZE #condição de parada do loop é o ultimo indice do vetor
+	li sum,0 #soma comeca com 0
+loop:
+	mv vec_offset, i_loop_var #index do loop é carregado no reg de offset
+	slli vec_offset, vec_offset, 2 #multiplica o index por 4 pq int tem 4 bytes
+	
+	add vec_offset, vec_offset, vec_addr #soma offset com endereço base
+	
+	lw cur_val, 0(vec_offset) #carrega valor do offset atual
+	add sum, sum, cur_val #adiciona valor atual a soma
+	
+	addi i_loop_var, i_loop_var, 1 #incrementa 1
+	bge i_loop_var, i_loop_condi, end_loop #se i for igual ou maior que a condição de parada, sai do loop
+	j loop
+end_loop:
+
+	print_int_reg sum
+ 
